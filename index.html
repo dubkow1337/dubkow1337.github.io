@@ -2,139 +2,33 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>REDRABBIT | лаборатория безопасности</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDRABBIT | security lab</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0c10;
-            color: #00ff9d;
-            font-family: 'Courier New', 'Fira Code', monospace;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
             line-height: 1.6;
             padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
-            transition: background 0.3s, color 0.3s;
         }
-
-        /* Светлая тема */
-        body.light {
-            background: #f0f0f0;
-            color: #0a0c10;
-        }
-        body.light .matrix-bg { opacity: 0.05; }
-        body.light .badge, body.light .project-card, body.light .stats { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.2); }
-        body.light a { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.3); color: #0a0c10; }
-        body.light a:hover { background: #0a0c10; color: #00ff9d; }
-        body.light .console-bar { background: #e0e0e0; border-top-color: #ccc; }
-
-        /* Матрица на фоне */
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.08;
-            pointer-events: none;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-        @keyframes pulse {
-            0%, 100% { text-shadow: 0 0 5px #00ff9d, 0 0 10px #00ff9d; }
-            50% { text-shadow: 0 0 20px #00ff9d, 0 0 30px #00ff9d; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .avatar { font-size: 3rem; filter: drop-shadow(0 0 5px #00ff9d); transition: transform 0.3s; cursor: default; animation: float 3s ease-in-out infinite; }
-        .avatar:hover { transform: scale(1.05); }
-        .theme-toggle {
-            background: rgba(0,255,157,0.1);
-            border: 1px solid #00ff9d;
-            color: #00ff9d;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: monospace;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-        .theme-toggle:hover { background: #00ff9d; color: #0a0c10; transform: scale(1.02); }
+        .container { max-width: 1000px; margin: 0 auto; }
         .glitch {
             font-size: 2.5rem;
             font-weight: bold;
-            text-transform: uppercase;
-            text-shadow: 0.05em 0 0 rgba(255,0,0,0.5), -0.05em -0.025em 0 rgba(0,255,0,0.3);
-            animation: pulse 2s infinite, glitch 3s infinite;
+            text-shadow: 0 0 5px #0f0;
             letter-spacing: 5px;
-            margin: 0;
         }
-        @keyframes glitch {
-            0%,100% { transform: skew(0deg,0deg); }
-            95% { transform: skew(0deg,0deg); }
-            96% { transform: skew(5deg,2deg); text-shadow: 0.1em 0 0 red; }
-            97% { transform: skew(-3deg,-1deg); text-shadow: -0.05em 0.025em 0 lime; }
-            98% { transform: skew(0deg,0deg); }
-        }
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 1.2em;
-            background-color: #00ff9d;
-            vertical-align: middle;
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-        .tagline { color: #4a4e5c; margin-bottom: 2rem; border-left: 3px solid #00ff9d; padding-left: 1rem; min-height: 3rem; font-size: 0.9rem; }
-        .section { margin: 2rem 0; animation: fadeInUp 0.6s ease-out forwards; opacity: 0; }
-        .section:nth-child(2) { animation-delay: 0.1s; }
-        .section:nth-child(3) { animation-delay: 0.15s; }
-        .section:nth-child(4) { animation-delay: 0.2s; }
-        .section:nth-child(5) { animation-delay: 0.25s; }
-        .section:nth-child(6) { animation-delay: 0.3s; }
-        .section:nth-child(7) { animation-delay: 0.35s; }
+        .avatar { font-size: 2.5rem; display: inline-block; margin-right: 15px; }
+        .tagline { color: #888; margin-bottom: 2rem; border-left: 3px solid #0f0; padding-left: 1rem; }
+        .section { margin: 2rem 0; }
         .section-title {
             font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            color: #00ff9d;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            border-bottom: 2px solid rgba(0,255,157,0.3);
-            padding-bottom: 0.5rem;
+            color: #0f0;
+            border-bottom: 2px solid #0f0;
             display: inline-block;
         }
         .stats {
@@ -142,150 +36,143 @@
             flex-wrap: wrap;
             gap: 1rem;
             justify-content: space-between;
+            background: #111;
+            padding: 1rem;
+            border-radius: 8px;
             margin: 1.5rem 0;
-            background: rgba(0,255,157,0.03);
-            padding: 1.2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(0,255,157,0.15);
         }
-        .stat-item { text-align: center; flex: 1; min-width: 90px; transition: transform 0.3s; }
-        .stat-item:hover { transform: translateY(-5px); }
-        .stat-number { font-size: 1.8rem; font-weight: bold; color: #00ff9d; }
-        .stat-label { font-size: 0.65rem; color: #4a4e5c; text-transform: uppercase; margin-top: 0.3rem; }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-number { font-size: 1.8rem; font-weight: bold; color: #0f0; }
+        .stat-label { font-size: 0.7rem; color: #888; }
         .project-card {
-            background: rgba(0,255,157,0.05);
-            border: 1px solid rgba(0,255,157,0.2);
-            padding: 1.2rem;
-            border-radius: 12px;
-            transition: 0.3s;
+            background: #111;
+            border: 1px solid #0f0;
+            padding: 1rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
+            transition: 0.2s;
         }
-        .project-card:hover { transform: translateX(8px); border-color: #00ff9d; background: rgba(0,255,157,0.08); }
-        .project-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .project-card:hover { transform: translateX(5px); background: #1a1a1a; }
         a {
-            color: #00ff9d;
+            color: #0f0;
             text-decoration: none;
-            font-weight: bold;
+            background: #1a1a1a;
             padding: 4px 12px;
             border-radius: 20px;
-            transition: 0.2s;
-            background: rgba(0,255,157,0.1);
-            border: 1px solid rgba(0,255,157,0.4);
             display: inline-block;
+            margin: 5px 0;
         }
-        a:hover { background: #00ff9d; color: #0a0c10; box-shadow: 0 0 12px #00ff9d; transform: scale(1.02); }
-        .project-desc { color: #8a8e9c; font-size: 0.85rem; margin: 0.5rem 0 0.5rem; }
+        a:hover { background: #0f0; color: #000; }
         .badge {
-            display: inline-block;
-            background: rgba(0,255,157,0.1);
-            padding: 0.3rem 0.8rem;
+            background: #1a1a1a;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: 0.2s;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 5px;
         }
-        .badge:hover { background: rgba(0,255,157,0.2); transform: scale(1.05); }
         .footer {
             margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0,255,157,0.2);
             text-align: center;
-            color: #4a4e5c;
-            font-size: 0.8rem;
+            color: #888;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
         }
-        .footer a { background: none; border: none; padding: 0; margin: 0 10px; }
-        .footer a:hover { background: none; box-shadow: none; text-decoration: underline; transform: none; }
         .copy-btn {
-            background: rgba(0,255,157,0.1);
-            border: 1px solid #00ff9d;
-            color: #00ff9d;
+            background: #1a1a1a;
+            border: 1px solid #0f0;
+            color: #0f0;
             padding: 2px 8px;
             border-radius: 12px;
             cursor: pointer;
-            font-size: 0.7rem;
             margin-left: 8px;
         }
-        .copy-btn:hover { background: #00ff9d; color: #0a0c10; }
+        .copy-btn:hover { background: #0f0; color: #000; }
         .console-bar {
-            background: #0d0e12;
-            border-top: 1px solid #1a1d24;
+            background: #000;
+            border-top: 1px solid #0f0;
             padding: 0.5rem;
-            font-family: monospace;
             font-size: 0.7rem;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            color: #4a4e5c;
-            z-index: 100;
             text-align: center;
+            color: #0f0;
+        }
+        .ascii-rabbit {
+            background: #0a0c10;
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            margin: 1rem 0;
+            white-space: pre;
+            overflow-x: auto;
         }
         @media (max-width: 600px) {
             .glitch { font-size: 1.5rem; letter-spacing: 2px; }
             .stats { flex-direction: column; gap: 0.5rem; }
             .stat-item { text-align: left; }
             .avatar { font-size: 2rem; }
-            .container { padding: 0 10px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .ascii-rabbit { font-size: 0.5rem; }
         }
     </style>
 </head>
 <body>
 
-<canvas class="matrix-bg" id="matrixCanvas"></canvas>
-
 <div class="container">
-    <div class="header">
-        <div class="logo-area">
-            <div class="avatar">🐇</div>
-            <h1 class="glitch">REDRABBIT<span class="cursor"></span></h1>
-        </div>
-        <button class="theme-toggle" id="themeToggle">🌙 темная</button>
+    <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 1rem;">
+        <div class="avatar">🐇</div>
+        <h1 class="glitch">REDRABBIT</h1>
     </div>
 
-    <div class="tagline" id="tagline"></div>
+    <div class="tagline">// исследователь безопасности · сетевой анализ · low-level эксплойты</div>
 
-    <!-- Статистика -->
+    <!-- ASCII-арт кролика -->
+    <div class="ascii-rabbit" id="asciiRabbit">
+        (\_/)
+        (•_•)
+        / &gt; 🐇
+    </div>
+
+    <!-- Статистика с счётчиком времени жизни -->
     <div class="stats">
         <div class="stat-item"><div class="stat-number" id="repoCount">5+</div><div class="stat-label">проектов</div></div>
         <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">самописный код</div></div>
         <div class="stat-item"><div class="stat-number">&lt;1с</div><div class="stat-label">сканер портов</div></div>
         <div class="stat-item"><div class="stat-number">0.01с</div><div class="stat-label">взлом хеша</div></div>
         <div class="stat-item"><div class="stat-number" id="lastCommit">—</div><div class="stat-label">посл. коммит</div></div>
-        <div class="stat-item"><div class="stat-number" id="viewCounter">—</div><div class="stat-label">просмотров</div></div>
-    </div>
-
-    <!-- Случайный совет -->
-    <div class="section">
-        <div class="section-title">💡 совет по безопасности</div>
-        <div class="project-desc" id="securityTip">Загрузка...</div>
+        <div class="stat-item"><div class="stat-number" id="accountAge">—</div><div class="stat-label">дней в безопасности</div></div>
     </div>
 
     <!-- Проекты -->
     <div class="section">
-        <div class="section-title">📡 проекты</div>
-        <div class="project-card"><div class="project-title"><a href="https://github.com/dubkow1337/port_scanner" target="_blank">🔍 port_scanner →</a></div><div class="project-desc">Многопоточный TCP-сканер портов. 1024 порта за <strong>0.16 секунды</strong>.</div><div class="badge">Python</div><div class="badge">sockets</div><div class="badge">threading</div></div>
-        <div class="project-card"><div class="project-title"><a href="https://github.com/dubkow1337/hash-cracker" target="_blank">🔓 hash_cracker →</a></div><div class="project-desc">Словарная атака на хеши. Автоопределение алгоритмов. <strong>Взлом за 0.01 секунды</strong>.</div><div class="badge">Python</div><div class="badge">hashlib</div><div class="badge">криптография</div></div>
-        <div class="project-card"><div class="project-title"><a href="https://github.com/dubkow1337/web-scanner" target="_blank">🌐 web_scanner →</a></div><div class="project-desc">Поиск скрытых директорий. 80+ путей, обработка 200/403/301/302.</div><div class="badge">Python</div><div class="badge">requests</div><div class="badge">threading</div></div>
-        <div class="project-card"><div class="project-title"><a href="https://github.com/dubkow1337/url-scanner" target="_blank">✅ url_scanner →</a></div><div class="project-desc">Проверка ссылок на фишинг и вредоносность.</div><div class="badge">Python</div><div class="badge">security</div></div>
+        <div class="section-title">проекты</div>
+        <div class="project-card"><div><a href="https://github.com/dubkow1337/port_scanner" target="_blank">port_scanner →</a></div><div class="project-desc">Многопоточный TCP-сканер портов. 1024 порта за 0.16 секунды.</div><div class="badge">Python</div><div class="badge">sockets</div><div class="badge">threading</div></div>
+        <div class="project-card"><div><a href="https://github.com/dubkow1337/hash-cracker" target="_blank">hash_cracker →</a></div><div class="project-desc">Словарная атака на хеши. Взлом за 0.01 секунды.</div><div class="badge">Python</div><div class="badge">hashlib</div></div>
+        <div class="project-card"><div><a href="https://github.com/dubkow1337/web-scanner" target="_blank">web_scanner →</a></div><div class="project-desc">Поиск скрытых директорий. 80+ путей.</div><div class="badge">Python</div><div class="badge">requests</div></div>
+        <div class="project-card"><div><a href="https://github.com/dubkow1337/url-scanner" target="_blank">url_scanner →</a></div><div class="project-desc">Проверка ссылок на фишинг.</div><div class="badge">Python</div><div class="badge">security</div></div>
     </div>
 
     <!-- Следующие цели -->
     <div class="section">
-        <div class="section-title">🎯 следующие цели</div>
+        <div class="section-title">следующие цели</div>
         <div class="project-desc">
             • Низкоуровневый бинарный эксплойт на C / assembler<br>
-            • Исследование уязвимостей ядра Linux (DOP, DirtyFree)<br>
-            • Свой фаззинг-фреймворк<br>
-            • Портирование игры на PS Vita (C++ / SDL2)<br>
+            • Исследование уязвимостей ядра Linux<br>
+            • Портирование игры на PS Vita<br>
             • Сертификация eJPT / PNPT
         </div>
     </div>
 
     <!-- Инструменты -->
     <div class="section">
-        <div class="section-title">⚙️ инструментарий</div>
+        <div class="section-title">инструментарий</div>
         <div>
             <span class="badge">Python</span>
             <span class="badge">Linux / WSL</span>
@@ -295,7 +182,6 @@
             <span class="badge">Burp Suite</span>
             <span class="badge">TCP/IP</span>
             <span class="badge">HTTP</span>
-            <span class="badge">MD5/SHA</span>
         </div>
     </div>
 
@@ -311,20 +197,6 @@
 <div class="console-bar" id="consoleBar">~/portfolio$ echo "REDRABBIT — security researcher"</div>
 
 <script>
-    // Печатная машинка
-    const text = "// исследователь безопасности · сетевой анализ · low-level эксплойты";
-    const tagline = document.getElementById('tagline');
-    let i = 0;
-    tagline.innerHTML = '';
-    function typeWriter() {
-        if (i < text.length) {
-            tagline.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typeWriter, 40);
-        }
-    }
-    typeWriter();
-
     // GitHub API
     fetch('https://api.github.com/users/dubkow1337/repos?per_page=100')
         .then(res => res.json())
@@ -342,41 +214,16 @@
             }
         }).catch(() => {});
 
-    // Тёмная тема с сохранением
-    const themeToggle = document.getElementById('themeToggle');
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light');
-        themeToggle.innerHTML = '🌙 темная';
+    // Счётчик времени жизни аккаунта
+    function calculateAccountAge() {
+        // Дата создания аккаунта dubkow1337 (замени на реальную, если знаешь точную)
+        // Пример: 1 июня 2024 года
+        const createdDate = new Date(2025, 5, 1); // Год, месяц (0-11), день
+        const today = new Date();
+        const diffDays = Math.floor((today - createdDate) / (1000 * 60 * 60 * 24));
+        document.getElementById('accountAge').innerHTML = diffDays > 0 ? diffDays : 42;
     }
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light');
-        const isLight = document.body.classList.contains('light');
-        themeToggle.innerHTML = isLight ? '🌙 темная' : '☀️ светлая';
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    });
-
-    // Советы
-    const tips = [
-        "Никогда не используй один пароль везде.",
-        "Включи двухфакторную аутентификацию (2FA) везде, где можно.",
-        "Не скачивай файлы из недоверенных источников.",
-        "Проверяй ссылки перед переходом — фишинг бывает очень убедительным.",
-        "Используй менеджер паролей (Bitwarden, KeePass).",
-        "Обновляй программы и систему — большинство атак идут через старые уязвимости.",
-        "Не открывай вложения в письмах от незнакомцев.",
-        "Сделай резервную копию важных данных."
-    ];
-    document.getElementById('securityTip').innerText = tips[Math.floor(Math.random() * tips.length)];
-
-    // Счётчик просмотров
-    async function updateViewCounter() {
-        try {
-            const res = await fetch('https://api.countapi.xyz/hit/dubkow1337.portfolio/visits');
-            const data = await res.json();
-            document.getElementById('viewCounter').innerHTML = data.value;
-        } catch(e) { document.getElementById('viewCounter').innerHTML = '?'; }
-    }
-    updateViewCounter();
+    calculateAccountAge();
 
     // Копирование email
     window.copyEmail = function() {
@@ -387,36 +234,20 @@
         setTimeout(() => btn.innerHTML = old, 1500);
     };
 
-    // Матрица на фоне
-    const matrixCanvas = document.getElementById('matrixCanvas');
-    const ctx = matrixCanvas.getContext('2d');
-    matrixCanvas.width = window.innerWidth;
-    matrixCanvas.height = window.innerHeight;
-    const chars = "01アイウエオカキクケコ";
-    const fontSize = 14;
-    let columns = matrixCanvas.width / fontSize;
-    let drops = [];
-    for (let x = 0; x < columns; x++) drops[x] = Math.random() * matrixCanvas.height / fontSize;
-    function drawMatrix() {
-        ctx.fillStyle = document.body.classList.contains('light') ? 'rgba(240, 240, 240, 0.04)' : 'rgba(10, 12, 16, 0.04)';
-        ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-        ctx.fillStyle = '#00ff9d';
-        ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < drops.length; i++) {
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        }
-    }
-    setInterval(drawMatrix, 50);
-    window.addEventListener('resize', () => {
-        matrixCanvas.width = window.innerWidth;
-        matrixCanvas.height = window.innerHeight;
-        columns = matrixCanvas.width / fontSize;
-        drops = [];
-        for (let x = 0; x < columns; x++) drops[x] = Math.random() * matrixCanvas.height / fontSize;
-    });
+    // Анимированный ASCII-арт (меняется каждые 5 секунд)
+    const asciiFrames = [
+        " (\\_/)\n (•_•)\n / > 🐇",
+        " (\\_/)\n (•_•)\n /_/ 🐇\n  U U",
+        "  /)/)\n (•_•)\n (   )🐇\n  (")",
+        " (\\_/)\n (x_x)\n / > 🐇",
+        " (\\_/)\n (•_•)\n < ) 🐇"
+    ];
+    let frameIndex = 0;
+    const asciiElement = document.getElementById('asciiRabbit');
+    setInterval(() => {
+        frameIndex = (frameIndex + 1) % asciiFrames.length;
+        asciiElement.innerText = asciiFrames[frameIndex];
+    }, 3000);
 </script>
 
 </body>
