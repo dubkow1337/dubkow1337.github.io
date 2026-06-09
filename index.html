@@ -42,7 +42,6 @@
         body.light a:hover { background: #0a0c10; color: #00ff9d; }
         body.light .console-bar { background: #e0e0e0; border-top-color: #ccc; color: #0a0c10; }
 
-        /* Матрица на фоне */
         .matrix-bg {
             position: fixed;
             top: 0;
@@ -195,7 +194,7 @@
             font-family: monospace;
             font-size: 0.85rem;
             line-height: 1.3;
-            white-space: pre;
+            min-height: 100px;
             transition: 0.3s;
         }
         .ascii-rabbit:hover { border-color: #00ff9d; box-shadow: 0 0 15px rgba(0,255,157,0.2); }
@@ -287,6 +286,11 @@
             z-index: 100;
             text-align: center;
         }
+        pre {
+            margin: 0;
+            font-family: monospace;
+            display: inline-block;
+        }
         @media (max-width: 600px) {
             .glitch { font-size: 1.5rem; letter-spacing: 2px; }
             .stats { flex-direction: column; gap: 0.5rem; }
@@ -295,6 +299,7 @@
             .container { padding: 0 10px; }
             .header { flex-direction: column; align-items: flex-start; gap: 10px; }
             .ascii-rabbit { font-size: 0.6rem; padding: 0.8rem; }
+            pre { font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -313,9 +318,9 @@
 
     <div class="tagline" id="tagline"></div>
 
-    <!-- Живой ASCII-кролик -->
-    <div class="ascii-rabbit" id="asciiRabbit">
-        <pre id="rabbitFrame" style="margin:0; font-family:monospace;">   (\_/)
+    <!-- Живой ASCII-кролик (прыгает + меняет морду) -->
+    <div class="ascii-rabbit">
+        <pre id="rabbitFrame" style="margin:0; font-family:monospace; display: inline-block;">   (\_/)
    (•_•)
    / > 🐇</pre>
     </div>
@@ -424,28 +429,36 @@
         setTimeout(() => btn.innerHTML = old, 1500);
     };
 
-    // Анимированный ASCII-кролик (12 кадров, живые уши, глаза, лапы)
-    const asciiFrames = [
-        "   (\\_/)\n   (•_•)\n   / > 🐇",
-        "   (\\_/)\n   (•_•)\n   /_/ 🐇",
-        "   (\\_/)\n   (•_•)\n   < ) 🐇",
-        "   (\\_/)\n   (x_x)\n   / > 🐇",
-        "   (\\_/)\n   (◕_◕)\n   / > 🐇",
-        "   (\\_/)\n   (•_•)\n   🐇 > \\",
-        "   (\\_/)\n   (•_•)\n   /| 🐇",
-        "   (\\_/)\n   (•_•)\n   | > 🐇",
-        "   (\\_/)\n   (◦_◦)\n   / > 🐇",
-        "   (\\_/)\n   (•_•)\n   \\< 🐇",
-        "   (\\_/)\n   (>_<)\n   / > 🐇",
-        "   (\\_/)\n   (•_•)\n   / > 🐇✨"
-    ];
-    let frameIndex = 0;
+    // ======================= ЖИВОЙ ПРЫГАЮЩИЙ КРОЛИК =======================
     const rabbitFrame = document.getElementById('rabbitFrame');
     if (rabbitFrame) {
+        let frame = 0;
+        let yOffset = 0;
+        let direction = 1;
+
+        // Кадры: уши, глаза, лапы
+        const earsList = ['(\\_/)', '("/")', '(\\_/)', '(" )', '(\\_/)', '("_")'];
+        const facesList = ['•_•', 'x_x', '◕_◕', '◦_◦', '>_<', '•_•', '⊙_⊙', '◔_◔'];
+        const pawsList = ['/ > 🐇', '/_/ 🐇', '< ) 🐇', '| > 🐇', '\\< 🐇', '/ > 🐇✨', ') > 🐇', '( < 🐇'];
+
         setInterval(() => {
-            frameIndex = (frameIndex + 1) % asciiFrames.length;
-            rabbitFrame.innerText = asciiFrames[frameIndex];
-        }, 1800);
+            // Берём текущие значения
+            const currentEars = earsList[frame % earsList.length];
+            const currentFace = facesList[frame % facesList.length];
+            const currentPaws = pawsList[frame % pawsList.length];
+
+            // Смещение для прыжка (двигаем текст вверх-вниз)
+            const spaces = yOffset > 0 ? '   ' : '      ';
+
+            rabbitFrame.innerText = `${spaces}${currentEars}\n${spaces}   (${currentFace})\n${spaces}   ${currentPaws}`;
+
+            frame++;
+
+            // Прыжок: меняем отступ
+            yOffset += direction * 1.5;
+            if (yOffset >= 7 || yOffset <= 0) direction *= -1;
+
+        }, 180); // ~6 кадров в секунду — плавное движение
     }
 
     // Тёмная тема с сохранением
