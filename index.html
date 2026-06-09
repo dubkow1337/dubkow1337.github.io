@@ -157,7 +157,6 @@
         .section:nth-child(4) { animation-delay: 0.2s; }
         .section:nth-child(5) { animation-delay: 0.25s; }
         .section:nth-child(6) { animation-delay: 0.3s; }
-        .section:nth-child(7) { animation-delay: 0.35s; }
         .section-title {
             font-size: 1.3rem;
             font-weight: bold;
@@ -188,16 +187,22 @@
             background: rgba(0,255,157,0.03);
             border: 1px solid #00ff9d;
             border-radius: 12px;
-            padding: 1rem;
+            padding: 1.2rem;
             margin: 1.5rem 0;
-            text-align: center;
+            text-align: left;
             font-family: monospace;
-            font-size: 0.85rem;
-            line-height: 1.3;
-            min-height: 100px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            min-height: 120px;
             transition: 0.3s;
         }
         .ascii-rabbit:hover { border-color: #00ff9d; box-shadow: 0 0 15px rgba(0,255,157,0.2); }
+        pre {
+            margin: 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
         .project-card {
             background: rgba(0,255,157,0.05);
             border: 1px solid rgba(0,255,157,0.2);
@@ -286,11 +291,6 @@
             z-index: 100;
             text-align: center;
         }
-        pre {
-            margin: 0;
-            font-family: monospace;
-            display: inline-block;
-        }
         @media (max-width: 600px) {
             .glitch { font-size: 1.5rem; letter-spacing: 2px; }
             .stats { flex-direction: column; gap: 0.5rem; }
@@ -298,8 +298,7 @@
             .avatar { font-size: 2rem; }
             .container { padding: 0 10px; }
             .header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .ascii-rabbit { font-size: 0.6rem; padding: 0.8rem; }
-            pre { font-size: 0.6rem; }
+            .ascii-rabbit { font-size: 0.7rem; padding: 0.8rem; }
         }
     </style>
 </head>
@@ -318,11 +317,9 @@
 
     <div class="tagline" id="tagline"></div>
 
-    <!-- Живой ASCII-кролик (прыгает + меняет морду) -->
+    <!-- Терминал с цитатами великих -->
     <div class="ascii-rabbit">
-        <pre id="rabbitFrame" style="margin:0; font-family:monospace; display: inline-block;">   (\_/)
-   (•_•)
-   / > 🐇</pre>
+        <pre id="quoteFrame" style="margin:0; font-family:monospace; text-align: left; white-space: pre-wrap;">> загрузка цитаты...</pre>
     </div>
 
     <div class="stats">
@@ -411,9 +408,9 @@
             }
         }).catch(() => console.log('GitHub API error'));
 
-    // Счётчик дней в теме (дата начала — 1 мая 2025)
+    // Счётчик дней в теме
     function calculateAccountAge() {
-        const startDate = new Date(2025, 4, 1); // 1 мая 2025 (месяц 4 = май)
+        const startDate = new Date(2025, 4, 1);
         const today = new Date();
         const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
         document.getElementById('accountAge').innerHTML = diffDays > 0 ? diffDays : 42;
@@ -429,39 +426,51 @@
         setTimeout(() => btn.innerHTML = old, 1500);
     };
 
-    // ======================= ЖИВОЙ ПРЫГАЮЩИЙ КРОЛИК =======================
-    const rabbitFrame = document.getElementById('rabbitFrame');
-    if (rabbitFrame) {
-        let frame = 0;
-        let yOffset = 0;
-        let direction = 1;
+    // ======================= ЦИТАТЫ ВЕЛИКИХ (как код, анимация) =======================
+    const quotes = [
+        { text: "Хакер — это тот, кто видит возможность там, где другие видят стену.", author: "unknown" },
+        { text: "Единственная по-настоящему безопасная система — выключенная.", author: "Брюс Шнайер" },
+        { text: "Пароли как трусы: меняй их часто, не показывай никому и не используй короткие.", author: "аноним" },
+        { text: "Сложность — враг безопасности.", author: "Брюс Шнайер" },
+        { text: "Если вы думаете, что технология решит ваши проблемы с безопасностью, вы не понимаете ни технологий, ни безопасности.", author: "Брюс Шнайер" },
+        { text: "В интернете никто не знает, что ты — кролик.", author: "REDRABBIT" },
+        { text: "Лучший способ взломать систему — найти человека, который ею управляет.", author: "Кевин Митник" },
+        { text: "Безопасность — это не продукт, а процесс.", author: "Брюс Шнайер" },
+        { text: "Код — это поэзия, только с побочными эффектами.", author: "REDRABBIT" },
+        { text: "Каждый раз, когда ты используешь пароль 123456, умирает один белый хакер.", author: "аноним" }
+    ];
 
-        // Кадры: уши, глаза, лапы
-        const earsList = ['(\\_/)', '("/")', '(\\_/)', '(" )', '(\\_/)', '("_")'];
-        const facesList = ['•_•', 'x_x', '◕_◕', '◦_◦', '>_<', '•_•', '⊙_⊙', '◔_◔'];
-        const pawsList = ['/ > 🐇', '/_/ 🐇', '< ) 🐇', '| > 🐇', '\\< 🐇', '/ > 🐇✨', ') > 🐇', '( < 🐇'];
+    let quoteIndex = 0;
+    let charIndex = 0;
+    let currentQuoteText = "";
+    const quoteFrame = document.getElementById('quoteFrame');
+    if (quoteFrame) {
+        function typeNextQuote() {
+            const quoteObj = quotes[quoteIndex % quotes.length];
+            const fullText = `> ${quoteObj.text}\n>   — ${quoteObj.author}`;
+            currentQuoteText = fullText;
+            charIndex = 0;
+            quoteFrame.innerText = "";
+            typeCharacter();
+        }
 
-        setInterval(() => {
-            // Берём текущие значения
-            const currentEars = earsList[frame % earsList.length];
-            const currentFace = facesList[frame % facesList.length];
-            const currentPaws = pawsList[frame % pawsList.length];
+        function typeCharacter() {
+            if (charIndex < currentQuoteText.length) {
+                quoteFrame.innerText += currentQuoteText[charIndex];
+                charIndex++;
+                setTimeout(typeCharacter, 25);
+            } else {
+                setTimeout(() => {
+                    quoteIndex++;
+                    typeNextQuote();
+                }, 10000);
+            }
+        }
 
-            // Смещение для прыжка (двигаем текст вверх-вниз)
-            const spaces = yOffset > 0 ? '   ' : '      ';
-
-            rabbitFrame.innerText = `${spaces}${currentEars}\n${spaces}   (${currentFace})\n${spaces}   ${currentPaws}`;
-
-            frame++;
-
-            // Прыжок: меняем отступ
-            yOffset += direction * 1.5;
-            if (yOffset >= 7 || yOffset <= 0) direction *= -1;
-
-        }, 180); // ~6 кадров в секунду — плавное движение
+        typeNextQuote();
     }
 
-    // Тёмная тема с сохранением
+    // Тёмная тема
     const themeToggle = document.getElementById('themeToggle');
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light');
@@ -477,13 +486,22 @@
     // Матрица на фоне
     const matrixCanvas = document.getElementById('matrixCanvas');
     const ctx = matrixCanvas.getContext('2d');
-    matrixCanvas.width = window.innerWidth;
-    matrixCanvas.height = window.innerHeight;
+    function resizeMatrix() {
+        matrixCanvas.width = window.innerWidth;
+        matrixCanvas.height = window.innerHeight;
+    }
+    resizeMatrix();
     const chars = "01アイウエオカキクケコ";
     const fontSize = 14;
     let columns = matrixCanvas.width / fontSize;
     let drops = [];
-    for (let x = 0; x < columns; x++) drops[x] = Math.random() * matrixCanvas.height / fontSize;
+    function initDrops() {
+        columns = matrixCanvas.width / fontSize;
+        drops = [];
+        for (let x = 0; x < columns; x++) drops[x] = Math.random() * matrixCanvas.height / fontSize;
+    }
+    initDrops();
+
     function drawMatrix() {
         ctx.fillStyle = document.body.classList.contains('light') ? 'rgba(240, 240, 240, 0.04)' : 'rgba(10, 12, 16, 0.04)';
         ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
@@ -498,11 +516,8 @@
     }
     setInterval(drawMatrix, 50);
     window.addEventListener('resize', () => {
-        matrixCanvas.width = window.innerWidth;
-        matrixCanvas.height = window.innerHeight;
-        columns = matrixCanvas.width / fontSize;
-        drops = [];
-        for (let x = 0; x < columns; x++) drops[x] = Math.random() * matrixCanvas.height / fontSize;
+        resizeMatrix();
+        initDrops();
     });
 </script>
 
